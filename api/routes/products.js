@@ -59,11 +59,15 @@ router.put('/edit/:id', upload.single('image'), async (req, res) => {
         if (!product) {
             return res.status(404).json({ message: 'Product not found' });
         } else {
-
-            const image = req.file;
-            // Convert the image buffer to Base64
-            const base64Image = image.buffer.toString('base64');
-
+            let base64Image = '';
+            if (req.file) {
+                // Convert the image buffer to Base64
+                const image = req.file;
+                base64Image = image.buffer.toString('base64');
+            } else if (req.body.image) {
+                // Use the input string as the base64-encoded image
+                base64Image = req.body.image;
+            }
             // Update the product fields
             product.name = name;
             product.price = price;
